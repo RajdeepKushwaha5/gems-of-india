@@ -4,10 +4,11 @@ import Link from "next/link"
 import { auth } from "@/lib/auth"
 import { Button } from "@/components/ui/button"
 import { EntitySection } from "@/components/home/entity-section"
+import { WelcomeBanner } from "@/components/home/welcome-banner"
 import { WebsiteStructuredData } from "@/components/seo/structured-data"
 
-import { getCurrentYearPageviews, getCurrentYearVisitors } from "./actions/analytics"
-import { getMonthBestEntities, getTodayEntities, getTrendingEntities } from "./actions/home"
+import { getCurrentYearPageviews, getCurrentYearVisitors } from "./actions/analytics.mock"
+import { getMonthBestEntities, getTodayEntities, getTrendingEntities } from "./actions/home.mock"
 
 export default async function Home() {
   const todayEntities = await getTodayEntities()
@@ -17,41 +18,32 @@ export default async function Home() {
   const currentYearVisitors = await getCurrentYearVisitors()
   const currentYearPageviews = await getCurrentYearPageviews()
 
-  // // Get session
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  // Get session (with error handling for mock mode)
+  let session = null
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    })
+  } catch (error) {
+    console.log("⚠️ Auth unavailable (running in mock mode):", error)
+  }
 
   return (
     <>
       <WebsiteStructuredData />
-      <main className="bg-muted/30 min-h-screen">
-        <div className="container mx-auto max-w-6xl px-4 pt-6 pb-12 md:pt-8">
+      <main className="from-background via-background to-muted/20 relative min-h-screen overflow-hidden bg-gradient-to-b">
+        {/* Decorative background elements */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_50%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.08),transparent_50%)]" />
+        <div className="bg-primary/5 pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full blur-3xl" />
+        <div className="bg-accent/5 pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full blur-3xl" />
+
+        <div className="relative container mx-auto max-w-6xl px-4 pt-6 pb-12 md:pt-8">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:items-start">
             {/* Contenu principal */}
             <div className="space-y-6 sm:space-y-8 lg:col-span-2">
-              {/* Welcome Banner */}
-              <div className="from-primary/10 via-primary/5 border-primary/20 relative overflow-hidden rounded-lg border bg-gradient-to-br to-transparent">
-                <div className="px-6 py-8 text-center">
-                  <div className="mx-auto max-w-2xl">
-                    <h1 className="text-foreground mb-3 text-2xl font-bold md:text-3xl">
-                      Discover Indian Gems
-                    </h1>
-                    <p className="text-muted-foreground mb-6 text-lg">
-                      Find babus, politicians, and departments. Rate, review, and improve
-                      accountability.
-                    </p>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                      <Button asChild size="lg">
-                        <Link href="/trending">Browse Gems</Link>
-                      </Button>
-                      <Button variant="outline" size="lg" asChild>
-                        <Link href="/submit">Submit Gem</Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Enhanced Welcome Banner */}
+              <WelcomeBanner />
 
               <EntitySection
                 title="Today's Top Rated"

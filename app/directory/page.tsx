@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { EntityCard } from "@/components/home/entity-card"
-import { getEntitiesForDirectory } from "@/app/actions/entities"
+import { getEntitiesForDirectory } from "@/app/actions/entities.mock"
 
 // Skeleton for the entity card
 function EntityCardSkeleton() {
@@ -188,13 +188,19 @@ function DirectoryContent() {
     entities.length > 0 ? typeof entities[0].userHasUpvoted === "boolean" : false
 
   return (
-    <main className="bg-secondary/20">
-      <div className="container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
+    <main className="from-background via-background to-muted/20 relative min-h-screen overflow-hidden bg-gradient-to-b">
+      {/* Decorative background elements */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.08),transparent_50%)]" />
+
+      <div className="relative container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
         <div className="mb-6 flex flex-col">
-          <h1 className="mb-4 text-2xl font-bold">Gems Directory</h1>
+          <h1 className="from-foreground to-foreground/70 mb-4 bg-gradient-to-r bg-clip-text text-3xl font-bold tracking-tight text-transparent">
+            Gems Directory
+          </h1>
 
           {/* Filters Section */}
-          <div className="bg-card mb-4 rounded-lg border p-4">
+          <div className="bg-card/50 border-border/50 mb-4 rounded-2xl border-2 p-5 shadow-lg backdrop-blur-sm">
             {/* Search */}
             <div className="relative mb-3">
               <input
@@ -392,8 +398,10 @@ export default function DirectoryPage() {
   return (
     <Suspense
       fallback={
-        <main className="bg-secondary/20">
-          <div className="container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
+        <main className="from-background via-background to-muted/20 relative min-h-screen bg-gradient-to-b">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_50%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.08),transparent_50%)]" />
+          <div className="relative container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
             <DirectoryDataSkeleton />
           </div>
         </main>

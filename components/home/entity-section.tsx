@@ -68,9 +68,12 @@ export function EntitySection({
   )
 
   return (
-    <section className="space-y-3 sm:space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold sm:text-2xl">{title}</h2>
+    <section className="animate-fade-in space-y-4 sm:space-y-5">
+      <div className="group flex items-center justify-between">
+        <h2 className="from-foreground to-foreground/70 flex items-center gap-2 bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent sm:text-2xl">
+          {title}
+          <span className="bg-primary inline-block h-1 w-1 animate-pulse rounded-full" />
+        </h2>
         {moreHref && (
           <div className="hidden sm:block">
             <ViewAllButton />

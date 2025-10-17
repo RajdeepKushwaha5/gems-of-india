@@ -9,7 +9,7 @@ import { ENTITY_LIMITS_VARIABLES } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { EntityCard } from "@/components/home/entity-card"
 // import { RiFilterLine, RiArrowDownSLine } from "@remixicon/react";
-import { getTopCategories } from "@/app/actions/entities"
+import { getTopCategories } from "@/app/actions/entities.mock"
 import { getMonthBestEntities, getTodayEntities, getYesterdayEntities } from "@/app/actions/home"
 
 interface EntitySummary {
@@ -97,9 +97,11 @@ async function TrendingData({
   }
 
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="space-y-4 sm:space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold sm:text-2xl">{title}</h2>
+        <h2 className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+          {title}
+        </h2>
       </div>
 
       {entities.length === 0 ? (
@@ -137,9 +139,14 @@ export default async function TrendingPage({
   const filter = params.filter || "today"
   const topCategories = await getTopCategories(5)
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  let session = null
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    })
+  } catch (error) {
+    console.log("⚠️ Auth unavailable (running in mock mode):", error)
+  }
   const isAuthenticated = !!session?.user
 
   const todayEntities = await getTodayEntities()
@@ -148,8 +155,12 @@ export default async function TrendingPage({
   ).length
 
   return (
-    <main className="bg-secondary/20">
-      <div className="container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
+    <main className="from-background via-background to-muted/20 relative min-h-screen overflow-hidden bg-gradient-to-b">
+      {/* Decorative background elements */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(168,85,247,0.08),transparent_50%)]" />
+
+      <div className="relative container mx-auto min-h-screen max-w-6xl px-4 pt-8 pb-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:items-start">
           {/* Main content */}
           <div className="space-y-6 sm:space-y-8 lg:col-span-2">
@@ -162,10 +173,10 @@ export default async function TrendingPage({
           <div className="top-24">
             {/* Quick Stats */}
             <div className="space-y-3 py-5 pt-0">
-              <h3 className="flex items-center gap-2 font-semibold">Live Now</h3>
+              <h3 className="flex items-center gap-2 text-lg font-bold">Live Now</h3>
               <Link
                 href="/trending"
-                className="bg-secondary/30 hover:bg-secondary/50 border-primary block rounded-md border-l-4 px-5 py-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-colors"
+                className="from-primary/10 to-primary/5 hover:from-primary/20 hover:to-primary/10 border-primary block rounded-xl border-l-4 bg-gradient-to-br px-5 py-3 shadow-md transition-all duration-300 hover:shadow-lg"
               >
                 <div className="flex items-center gap-4">
                   <div className="text-primary text-2xl font-bold">{ongoingGems}</div>

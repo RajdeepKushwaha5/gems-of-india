@@ -32,20 +32,35 @@ import { SearchCommand } from "./search-command"
 import { UserNav } from "./user-nav"
 
 export default async function Nav() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  let session = null
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    })
+  } catch (error) {
+    console.log("⚠️ Auth unavailable in nav (running in mock mode):", error)
+  }
   const user = session?.user
 
   return (
-    <nav className="bg-background/95 border-border/40 sticky top-0 z-50 border-b backdrop-blur-sm">
-      <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        {/* Logo */}
+    <nav className="border-border/40 bg-background/80 shadow-primary/5 sticky top-0 z-50 border-b shadow-lg backdrop-blur-xl">
+      <div className="from-primary/5 pointer-events-none absolute inset-0 bg-gradient-to-r via-transparent to-purple-500/5" />
+      <div className="relative container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+        {/* Enhanced Logo */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="font-heading flex items-center">
+          <Link
+            href="/"
+            className="group font-heading flex items-center transition-all duration-300 hover:scale-105"
+          >
             <span className="font-heading flex items-center text-lg font-bold">
-              <img src="/logo.svg" alt="logo" className="mr-1 h-8 w-8" />
-              Gems Of India
+              <img
+                src="/logo.svg"
+                alt="logo"
+                className="mr-2 h-9 w-9 transition-transform duration-300 group-hover:rotate-12"
+              />
+              <span className="from-foreground via-primary bg-gradient-to-r to-purple-600 bg-clip-text text-transparent">
+                Gems Of India
+              </span>
             </span>
           </Link>
 
@@ -62,10 +77,19 @@ export default async function Nav() {
             <UserNav user={user as User} />
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-primary/10 transition-all duration-300"
+                asChild
+              >
                 <Link href="/sign-in">Sign in</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button
+                size="sm"
+                className="from-primary hover:shadow-primary/50 bg-gradient-to-r to-purple-600 transition-all duration-300 hover:shadow-lg"
+                asChild
+              >
                 <Link href="/sign-up">Sign up</Link>
               </Button>
             </>
